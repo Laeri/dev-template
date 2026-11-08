@@ -17,17 +17,17 @@ WORKDIR /app
 
 # ---------------------------------------------------------------------------
 # All workspace dependencies (dev included: needed to build and to migrate).
+# `pnpm fetch` downloads everything from the lockfile alone, so this layer
+# stays cached until the lockfile changes and no per-package package.json
+# list has to be kept in sync. Root package.json only pins pnpm via corepack.
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/web/package.json apps/web/
-COPY packages/api/package.json packages/api/
-COPY packages/eslint-config/package.json packages/eslint-config/
-COPY packages/typescript-config/package.json packages/typescript-config/
-RUN pnpm install --frozen-lockfile
+RUN pnpm fetch
+COPY . .
+RUN pnpm install --frozen-lockfile --offline
 
 # ---------------------------------------------------------------------------
 FROM deps AS builder
-COPY . .
 # NEXT_PUBLIC_* variables are inlined into the bundle at build time.
 ARG NEXT_PUBLIC_APP_URL=http://localhost:3000
 ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
