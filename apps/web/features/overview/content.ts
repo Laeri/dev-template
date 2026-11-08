@@ -315,6 +315,8 @@ export type Reason = {
   title: string
   summary: string
   points: string[]
+  /** Advantages over a SPA + Spring Boot setup, where applicable. */
+  comparison?: string
   docs?: { label: string; href: string }
 }
 
@@ -324,6 +326,8 @@ export const reasons: Reason[] = [
     title: "Monorepo",
     summary:
       "The web app and the shared API contract live in one repository, built by Turborepo.",
+    comparison:
+      "Usually two repositories, two build systems (npm and Maven/Gradle), two CI pipelines and two deployments. An API change needs coordinated pull requests and releases, and a frontend deployed before or after the backend can break in production. Here one pull request, one pipeline and one deployment keep both sides in step.",
     points: [
       "One pull request can change the contract, the server and the UI together, so they never drift apart.",
       "Shared ESLint and TypeScript configs keep every package consistent.",
@@ -339,6 +343,8 @@ export const reasons: Reason[] = [
     title: "pnpm",
     summary:
       "A fast, disk-efficient package manager with first-class workspaces.",
+    comparison:
+      "With Spring Boot you maintain two dependency ecosystems (Maven Central and npm), each with its own update, audit and vulnerability tooling. Here there is one lockfile and one place to update and audit.",
     points: [
       "A content-addressable store links each package version once, so installs are fast and use little disk space.",
       "A strict node_modules layout: code can only import dependencies it declares, so there are no phantom dependencies.",
@@ -350,6 +356,8 @@ export const reasons: Reason[] = [
     title: "Feature folders",
     summary:
       "Code is grouped by what it does (tasks, users, sso) rather than by what it is (components, routers).",
+    comparison:
+      "In a layered Spring Boot project one feature is spread over controller, service, repository, entity, DTO and mapper packages, plus TypeScript types, an API client and components in the SPA repository. Here a feature is one folder plus its contract file, so it can be reviewed or removed as a unit.",
     points: [
       "Code that changes together lives together: a feature's UI, procedures and helpers sit in one folder.",
       "Easy to find, review, hand over or delete a whole feature.",
@@ -361,6 +369,8 @@ export const reasons: Reason[] = [
     title: "oRPC, contract first",
     summary:
       "packages/api defines every procedure (input, output, errors) before it is implemented.",
+    comparison:
+      "With Spring Boot the SPA either hand-writes TypeScript interfaces that mirror the Java DTOs (they drift and fail at runtime) or generates a client from OpenAPI (springdoc + openapi-generator): an extra build step, generated code to keep in sync, annotations as the source of truth and often wrong nullability. Here types flow straight from the contract, with no generation step, and a breaking change fails the build.",
     points: [
       "End-to-end type safety without code generation: rename a field and TypeScript points out every caller.",
       "The server must implement the whole contract, so missing or mismatched procedures fail typecheck.",
@@ -378,6 +388,8 @@ export const reasons: Reason[] = [
     title: "One client for web and mobile",
     summary:
       "The same contract and typed client can be used by any TypeScript app, not only this one.",
+    comparison:
+      "With Spring Boot every client platform needs its own generated OpenAPI client, regenerated after each API change. Here a React Native app imports the same TypeScript package and gets the same typed calls and query helpers.",
     points: [
       "A React Native or Expo app can import @workspace/api and call the same /rpc endpoints with full types.",
       "The same goes for CLIs, background workers and other services.",
@@ -392,6 +404,8 @@ export const reasons: Reason[] = [
     title: "Zod, shared validation",
     summary:
       "The same zod schema validates a form in the browser and the request on the server.",
+    comparison:
+      "With Spring Boot rules are written twice: Bean Validation annotations (@NotBlank, @Size) on Java DTOs and again in the SPA. They drift apart (a different max length, a missing rule, different messages) and users see errors only after a round trip. Here one schema serves both sides.",
     points: [
       "Validation rules are written once, in packages/api/src/schemas.",
       "Forms use them through the react-hook-form zod resolver, so users get the same errors instantly, before any request is sent.",
@@ -404,6 +418,8 @@ export const reasons: Reason[] = [
     title: "TypeScript everywhere",
     summary:
       "Frontend and backend are written in the same language, so code can be shared across the boundary.",
+    comparison:
+      "Java + TypeScript means two languages and toolchains, duplicated enums, constants and helpers, and specialised frontend and backend developers. Serialization is a classic source of bugs too (Jackson date formats, LocalDateTime time zones, Long precision in JavaScript). Here types, schemas, validation logic and helpers are shared directly, and oRPC carries Date, Map and Set over the wire as-is.",
     points: [
       "Share types, schemas, constants and helpers between server and client.",
       "Refactors cross the network boundary safely: the compiler checks both sides.",
@@ -418,6 +434,8 @@ export const reasons: Reason[] = [
     title: "React Email",
     summary:
       "Emails are React components, not templates in yet another templating language.",
+    comparison:
+      "Spring Boot emails typically use Thymeleaf or FreeMarker: another syntax, variables that are only checked at runtime, and no reuse of frontend components. Here templates are type-checked like any other code.",
     points: [
       "No Handlebars, MJML or Jinja: the same JSX, components and TypeScript as the rest of the app.",
       "Typed props: a template can't be sent with missing or wrong data.",
@@ -430,6 +448,8 @@ export const reasons: Reason[] = [
     title: "Tailwind CSS v4",
     summary:
       "Design tokens are CSS variables, configured in CSS rather than JavaScript.",
+    comparison:
+      "With Spring Boot, server-rendered views (Thymeleaf) and the SPA are separate frontends: the Tailwind build has to be bolted onto Maven/Gradle (frontend-maven-plugin) or kept in the SPA repository, and the two drift apart. Here one build and one set of tokens style server-rendered and client pages alike.",
     points: [
       "Colors, radii and fonts are CSS variables in app/globals.css (@theme), so theming means changing a few variables.",
       "Dark mode redefines the same variables under .dark; components don't change.",
@@ -445,6 +465,8 @@ export const reasons: Reason[] = [
     title: "Next.js, one framework for every shape of app",
     summary:
       "The same project can be a backend, a server-rendered app, a SPA-like client or a static site.",
+    comparison:
+      "A SPA ships an empty HTML page plus a JavaScript bundle: slower first paint, weak SEO, loading spinners, and auth checks that only run after the bundle loads (flicker or a flash of protected UI). Static pages or server-rendered HTML would need another stack next to Spring Boot. A separate frontend origin also needs CORS or a reverse proxy. Here server components gate and render pages before any HTML is sent, static, SSR and SPA-style pages share one deployment, and the API is same-origin. Server and client code also hot-reload in one dev server instead of waiting for JVM restarts.",
     points: [
       "Backend only: route handlers serve an API, like /rpc and /api/auth here.",
       "Backend + server-rendered frontend: server components render HTML on the server, fast first load and SEO.",
@@ -461,6 +483,8 @@ export const reasons: Reason[] = [
     title: "better-auth",
     summary:
       "One integrated, self-hosted auth library instead of stitching together several services.",
+    comparison:
+      "With Spring Security, SAML, OIDC and TOTP need extra modules or an external Keycloak, plus considerable configuration. A SPA talking to a separate API also has to choose between tokens in localStorage (exposed to XSS) with refresh logic, or cookies with CORS and CSRF set up across origins. Here sessions are httpOnly cookies on the same origin, and 2FA and SSO are plugins of one library.",
     points: [
       "Users, sessions and accounts are stored in your own Postgres via Drizzle. No per-user pricing, no vendor lock-in.",
       "Included here: email + password, TOTP two-factor, SAML SSO, admin roles.",
@@ -476,6 +500,8 @@ export const reasons: Reason[] = [
   {
     title: "Drizzle ORM",
     summary: "A typed, SQL-shaped ORM with plain SQL migrations.",
+    comparison:
+      "JPA/Hibernate hides SQL behind entity mapping, which brings N+1 queries, lazy-loading surprises (LazyInitializationException) and a separate migration tool (Flyway, Liquibase) kept in sync by hand. Here queries are explicit and migrations are generated from the schema.",
     points: [
       "Queries look like SQL, so there is little to learn and nothing hidden.",
       "Types come straight from the schema, with no generation step or query engine binary.",
@@ -490,6 +516,8 @@ export const reasons: Reason[] = [
     title: "shadcn/ui",
     summary:
       "Components are copied into the repo as source, not installed as a dependency.",
+    comparison:
+      "React components can't be used in Thymeleaf views, so server-rendered pages (login, error pages, simple admin screens) and the SPA end up with two UI implementations. Here the same components render on the server and in the browser.",
     points: [
       "You own the code: change any component without forking a library.",
       "Built on accessible Radix and Base UI primitives.",
