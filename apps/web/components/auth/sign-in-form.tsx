@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -112,10 +111,7 @@ export function SignInForm() {
           Sign in
         </Button>
         <p className="text-sm text-muted-foreground">
-          No account?{" "}
-          <Link href="/sign-up" className="text-foreground underline">
-            Sign up
-          </Link>
+          No account? Ask an administrator to create one.
         </p>
       </CardFooter>
     </Card>

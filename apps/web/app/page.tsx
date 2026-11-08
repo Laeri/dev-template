@@ -34,14 +34,9 @@ export default async function Page() {
             <Link href="/dashboard">Go to dashboard</Link>
           </Button>
         ) : (
-          <>
-            <Button asChild>
-              <Link href="/sign-up">Get started</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/sign-in">Sign in</Link>
-            </Button>
-          </>
+          <Button asChild>
+            <Link href="/sign-in">Sign in</Link>
+          </Button>
         )}
       </div>
       <p className="font-mono text-xs text-muted-foreground">
