@@ -1,0 +1,30 @@
+{
+  "name": "@workspace/email",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "scripts": {
+    "dev": "email dev --dir emails --port 3001",
+    "export": "email export --dir emails",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-email/render": "^2.2.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-email": "^6.11.6"
+  },
+  "devDependencies": {
+    "@react-email/ui": "^6.11.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^10.14.0",
+    "typescript": "^5.9.3"
+  }
+}
