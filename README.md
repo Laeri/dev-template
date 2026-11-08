@@ -65,6 +65,7 @@ packages/api/src/
 | `admin`      | Admin section shell (navigation)        |
 | `auth`       | Sign-in forms, SSO sign-in, sign-out    |
 | `health`     | Health check procedure                  |
+| `overview`   | Content of the start page               |
 | `settings`   | App settings (2FA requirement toggle)   |
 | `setup`      | First-admin setup form and procedure    |
 | `sso`        | SAML provider management                |
@@ -94,9 +95,12 @@ pnpm dev                                 # http://localhost:3000
 pnpm email:dev                           # email previews on http://localhost:3001
 ```
 
-Open http://localhost:3000. On a fresh database every page redirects to
-`/setup`, where you create the first admin account. Emails (e.g. password
-resets) show up in Mailpit at http://localhost:8025.
+Open http://localhost:3000. The start page (`apps/web/app/page.tsx`) explains
+the template: libraries (with links to their docs), what is preconfigured,
+routes, structure and UI components. Replace it with your own landing page.
+On a fresh database every other page redirects to `/setup`, where you create
+the first admin account. Emails (e.g. password resets) show up in Mailpit at
+http://localhost:8025.
 
 ### Dev container
 
