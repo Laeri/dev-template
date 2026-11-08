@@ -265,8 +265,8 @@ the container `DATABASE_URL` and `SMTP_HOST` point at the `postgres` and
 `mailpit` services. The app's ports 3000 and 3001 are published on
 `127.0.0.1`, and Mailpit's UI is on http://localhost:8026 (not 8025, so it can
 run alongside `docker compose up` from the host). Postgres is only reachable
-inside the container. node_modules live in container volumes, so host and container installs don't
-clash. When you add a workspace package, add a volume for its node_modules in
+inside the container. node_modules and the pnpm store live in container
+volumes, so host and container installs don't clash. When you add a workspace package, add a volume for its node_modules in
 `.devcontainer/docker-compose.yml`.
 
 Without VS Code, use the [devcontainer CLI](https://github.com/devcontainers/cli):

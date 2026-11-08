@@ -20,8 +20,11 @@ services:
       - node-modules-api:/workspace/packages/api/node_modules
       - node-modules-eslint-config:/workspace/packages/eslint-config/node_modules
       - node-modules-typescript-config:/workspace/packages/typescript-config/node_modules
-      - pnpm-store:/home/node/.local/share/pnpm/store
     environment:
+      # pnpm hardlinks from the store into node_modules/.pnpm, which only works
+      # on the same filesystem. Anywhere else, pnpm silently creates
+      # /workspace/.pnpm-store in the bind-mounted repo instead.
+      pnpm_config_store_dir: /workspace/node_modules/.pnpm-store
       # Real env vars win over apps/web/.env (Next.js and drizzle-kit both use
       # @next/env, which never overrides existing variables).
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/app
@@ -46,4 +49,3 @@ volumes:
   node-modules-api:
   node-modules-eslint-config:
   node-modules-typescript-config:
-  pnpm-store:

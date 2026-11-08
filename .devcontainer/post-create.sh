@@ -5,8 +5,7 @@ set -euo pipefail
 sudo chown node:node \
   node_modules \
   apps/web/node_modules \
-  packages/*/node_modules \
-  /home/node/.local/share/pnpm/store
+  packages/*/node_modules
 
 if [ ! -f apps/web/.env ]; then
   cp apps/web/.env.example apps/web/.env
