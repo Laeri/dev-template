@@ -320,6 +320,10 @@ export type Reason = {
   docs?: { label: string; href: string }
 }
 
+/** When a SPA + Spring Boot setup can still be the better choice. */
+export const springBootFit =
+  "It can still be the right call for teams that are already strong in Java, for systems that depend on JVM libraries or the wider Spring ecosystem, or for CPU-heavy backends. A Next.js frontend can also talk to an existing Spring Boot API; you lose the shared types unless you generate them from OpenAPI."
+
 /** Why the template is built the way it is. */
 export const reasons: Reason[] = [
   {

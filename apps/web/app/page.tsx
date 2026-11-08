@@ -20,6 +20,7 @@ import {
   featureTree,
   preconfigured,
   reasons,
+  springBootFit,
   routes,
   shadcnComponents,
   stack,
@@ -216,6 +217,12 @@ export default async function Page() {
               </Card>
             ))}
           </div>
+          <p className="rounded-lg border bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">
+              When SPA + Spring Boot still fits:
+            </span>{" "}
+            {springBootFit}
+          </p>
         </Section>
 
         <Section
