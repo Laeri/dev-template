@@ -1,5 +1,5 @@
-import { CreateSamlProviderDialog } from "@/components/admin/create-saml-provider-dialog"
-import { SamlProviders } from "@/components/admin/saml-providers"
+import { CreateSamlProviderDialog } from "@/features/sso/components/create-saml-provider-dialog"
+import { SamlProviders } from "@/features/sso/components/saml-providers"
 
 export default function AdminSamlPage() {
   return (

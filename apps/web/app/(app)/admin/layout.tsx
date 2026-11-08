@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { AdminNav } from "@/components/admin/admin-nav"
+import { AdminNav } from "@/features/admin/components/admin-nav"
 import { Button } from "@/components/ui/button"
 import { requireAdmin } from "@/lib/session"
 

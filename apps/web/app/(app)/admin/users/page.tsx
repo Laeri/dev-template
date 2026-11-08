@@ -1,5 +1,5 @@
-import { CreateUserDialog } from "@/components/admin/create-user-dialog"
-import { UsersTable } from "@/components/admin/users-table"
+import { CreateUserDialog } from "@/features/users/components/create-user-dialog"
+import { UsersTable } from "@/features/users/components/users-table"
 import { requireAdmin } from "@/lib/session"
 
 export default async function AdminUsersPage() {

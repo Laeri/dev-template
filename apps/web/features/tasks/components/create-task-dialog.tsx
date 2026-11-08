@@ -35,7 +35,7 @@ import { toast } from "sonner"
 
 import { orpc } from "@/lib/orpc"
 
-import { priorityLabels, statusLabels } from "./task-options"
+import { priorityLabels, statusLabels } from "../task-options"
 
 const defaultValues: CreateTaskInput = {
   title: "",

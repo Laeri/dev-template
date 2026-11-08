@@ -4,7 +4,7 @@ import { and, desc, eq } from "drizzle-orm"
 
 import { db, schema } from "@/db"
 
-import { authed, os } from "../orpc"
+import { authed, os } from "@/server/orpc"
 
 const taskColumns = {
   id: schema.task.id,

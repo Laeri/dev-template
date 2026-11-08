@@ -21,17 +21,18 @@ A pnpm + Turborepo monorepo with:
 ```
 apps/
   web/                   Next.js app (everything that runs on the server or in the browser)
-    app/                 routes; app/globals.css holds the Tailwind + shadcn theme
+    app/                 routes (thin pages); app/globals.css holds the theme tokens
     app/rpc/             oRPC HTTP handler (/rpc/*)
     app/api/auth/        better-auth handler (/api/auth/*)
-    components/ui/       shadcn/ui components
+    features/            feature folders: components, oRPC procedures, helpers
+    components/ui/       shadcn/ui components (shared)
     db/                  Drizzle schema, client, migrations
     emails/              React Email templates
-    server/              oRPC router (server/routers/*) implementing the contract
-    lib/                 auth, sessions, 2FA rule, settings, orpc client, email, env
+    server/              oRPC setup + middlewares; router.ts combines the feature routers
+    lib/                 cross-cutting: auth, sessions, 2FA rule, settings, orpc client, email, env
     proxy.ts             optimistic auth redirect for /dashboard, /admin
 packages/
-  api/                   oRPC contract + zod input/output schemas (no server code)
+  api/                   oRPC contract + zod schemas, one file per feature (no server code)
   eslint-config/         shared ESLint config
   typescript-config/     shared tsconfig
 ```
@@ -43,6 +44,44 @@ client never imports server code. It depends only on `zod` and
 `@orpc/contract`, and holds only what crosses the wire (inputs, outputs,
 errors). Database tables live in `apps/web/db` and are mapped to these shapes
 in the router, so the contract does not change when the schema does.
+
+### Feature folders
+
+Code is grouped by feature, not by kind. Everything a feature needs on the
+web side lives in `apps/web/features/<feature>/`:
+
+```
+apps/web/features/tasks/
+  components/            UI used by the feature's pages (tasks-table, create-task-dialog)
+  server/router.ts       oRPC procedures for the feature ("server-only")
+  task-options.ts        helpers shared by the feature's UI
+packages/api/src/
+  contracts/task.ts      the feature's contract (procedures, errors)
+  schemas/task.ts        the feature's zod schemas
+```
+
+| Feature      | Contains                                |
+| ------------ | --------------------------------------- |
+| `admin`      | Admin section shell (navigation)        |
+| `auth`       | Sign-in forms, SSO sign-in, sign-out    |
+| `health`     | Health check procedure                  |
+| `settings`   | App settings (2FA requirement toggle)   |
+| `setup`      | First-admin setup form and procedure    |
+| `sso`        | SAML provider management                |
+| `tasks`      | Example CRUD: table, dialog, procedures |
+| `two-factor` | TOTP enrolment and verification         |
+| `users`      | Admin user management                   |
+
+Rules of thumb:
+
+- Pages in `app/` stay thin: they gate access and compose feature components.
+- A feature may use shared code (`components/ui`, `lib`, `db`, `emails`), but
+  doesn't reach into another feature's internals. Move code that several
+  features need into a shared place.
+- Files under `features/*/server/` start with `import "server-only"`, so
+  importing them from client code fails the build.
+- The Drizzle schema stays in `db/schema/` (one file per feature), because
+  all tables share one set of migrations.
 
 ## Getting started
 
@@ -131,11 +170,16 @@ Import as `@/components/ui/<name>`.
 **Add an API procedure**:
 
 1. Define it in `packages/api/src/contracts/*` (input/output zod schemas, errors).
-2. Implement it in `apps/web/server/routers/*` (wire it up in
-   `server/router.ts`). Protect it with the `authed` or `adminOnly`
+2. Implement it in `apps/web/features/<feature>/server/router.ts` (wire it up
+   in `apps/web/server/router.ts`). Protect it with the `authed` or `adminOnly`
    middleware from `server/orpc.ts`. TypeScript fails until you implement it.
 3. Call it from the client with `useQuery(orpc.<ns>.<proc>.queryOptions(...))`
    or `useMutation(orpc.<ns>.<proc>.mutationOptions())`.
+
+**Add a feature**: create `apps/web/features/<feature>/` with `components/` and
+`server/router.ts`, add its contract and schemas to `packages/api`, register
+the router in `apps/web/server/router.ts`, and add a page under `app/` that
+composes the feature's components.
 
 **Add an email**: create `apps/web/emails/<name>.tsx` with `PreviewProps`, then
 add a `send…Email` helper in `apps/web/lib/email.tsx` that calls `sendEmail()`.

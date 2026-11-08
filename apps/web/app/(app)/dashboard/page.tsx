@@ -1,8 +1,8 @@
 import Link from "next/link"
 
-import { SignOutButton } from "@/components/auth/sign-out-button"
-import { CreateTaskDialog } from "@/components/tasks/create-task-dialog"
-import { TasksTable } from "@/components/tasks/tasks-table"
+import { SignOutButton } from "@/features/auth/components/sign-out-button"
+import { CreateTaskDialog } from "@/features/tasks/components/create-task-dialog"
+import { TasksTable } from "@/features/tasks/components/tasks-table"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { requireSession } from "@/lib/session"

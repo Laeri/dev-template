@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 
-import { TwoFactorVerifyForm } from "@/components/two-factor/verify-form"
+import { TwoFactorVerifyForm } from "@/features/two-factor/components/verify-form"
 
 export default function TwoFactorPage() {
   return (

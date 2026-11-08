@@ -13,9 +13,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Package manager: pnpm 11 workspace. `minimumReleaseAge` (7 days) is enforced in `pnpm-workspace.yaml`; don't remove it. If an install is blocked, loosen the version range instead.
 - TanStack Table is **v9** (`useTable`, `tableFeatures`, `create*RowModel`), not v8. See `node_modules/@tanstack/react-table/skills/`.
 - shadcn forms use `Field` + react-hook-form `Controller` (there is no `Form` component).
-- API changes start in `packages/api` (contract), then `apps/web/server/router.ts`.
+- API changes start in `packages/api` (contract), then the feature's `server/router.ts` (registered in `apps/web/server/router.ts`).
 - `packages/api` is the only shared package. It holds the wire contract (zod + `@orpc/contract` only) and must stay free of server code; the client imports it.
 - Everything else lives in `apps/web`: shadcn components in `components/ui`, Drizzle in `db/`, React Email templates in `emails/`. Env vars are in `apps/web/.env`.
+- Feature folders: feature code lives in `apps/web/features/<feature>/` (`components/`, `server/router.ts`, feature helpers). Pages in `app/` stay thin and compose feature components. Features don't import each other's internals; code several features need goes to `components/ui`, `lib/`, `db/` or `emails/`. Contracts/schemas stay in `packages/api` (one file per feature), Drizzle tables in `db/schema/`.
 
 ## Data access
 
@@ -23,7 +24,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - **No Next.js server functions**: no `"use server"`, no server actions, no form `action={serverFn}`. The only route handlers are `/rpc` (oRPC) and `/api/auth` (better-auth). Don't add others.
 - Server code that reads per-request state from the DB without `headers()`/`cookies()` must call `await connection()` (see `lib/setup.ts`), otherwise Next.js prerenders it at build time.
 - Server components may read the session (`apps/web/lib/session.ts`) to gate or redirect. If a server component ever needs app data, it must call the same oRPC router through a server-side router client (not set up yet), never `db` directly.
-- All business logic lives in oRPC procedures (`apps/web/server/routers/*`, combined in `server/router.ts`) behind the middlewares in `apps/web/server/orpc.ts` (`authed`, `adminOnly`).
+- All business logic lives in oRPC procedures (`apps/web/features/*/server/router.ts`, each starting with `import "server-only"`, combined in `server/router.ts`) behind the middlewares in `apps/web/server/orpc.ts` (`authed`, `adminOnly`).
 
 ## Auth
 

@@ -6,7 +6,7 @@ import { db } from "@/db"
 import { auth } from "@/lib/auth"
 import { isSetupComplete } from "@/lib/setup"
 
-import { os } from "../orpc"
+import { os } from "@/server/orpc"
 
 // Arbitrary constant identifying the "create first admin" advisory lock.
 const SETUP_LOCK_ID = 7_294_001

@@ -49,7 +49,7 @@ import { toast } from "sonner"
 
 import { orpc } from "@/lib/orpc"
 
-import { priorityLabels, statusLabels } from "./task-options"
+import { priorityLabels, statusLabels } from "../task-options"
 
 // Features, columns and fallback data live at module scope so they stay stable.
 const features = tableFeatures({

@@ -8,7 +8,7 @@ import { db, schema } from "@/db"
 import { auth } from "@/lib/auth"
 import { env } from "@/lib/env"
 
-import { adminOnly, os } from "../orpc"
+import { adminOnly, os } from "@/server/orpc"
 
 const authBaseUrl = `${env.BETTER_AUTH_URL}/api/auth`
 const appUrl = env.BETTER_AUTH_URL

@@ -2,7 +2,7 @@ import "server-only"
 
 import { getAppSettings, updateAppSettings } from "@/lib/settings"
 
-import { adminOnly, os } from "../orpc"
+import { adminOnly, os } from "@/server/orpc"
 
 export const settingsRouter = {
   get: os.settings.get.use(adminOnly).handler(() => getAppSettings()),

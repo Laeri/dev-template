@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm"
 import { db, schema } from "@/db"
 import { auth } from "@/lib/auth"
 
-import { adminOnly, os } from "../orpc"
+import { adminOnly, os } from "@/server/orpc"
 
 function toAdminUser(
   user: typeof schema.user.$inferSelect,

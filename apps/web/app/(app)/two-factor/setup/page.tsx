@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-import { TwoFactorSetup } from "@/components/two-factor/setup"
+import { TwoFactorSetup } from "@/features/two-factor/components/setup"
 import { requireSessionAllowNo2FA } from "@/lib/session"
 
 export default async function TwoFactorSetupPage() {

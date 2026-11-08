@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-import { SetupAdminForm } from "@/components/auth/setup-admin-form"
+import { SetupAdminForm } from "@/features/setup/components/setup-admin-form"
 import { isSetupComplete } from "@/lib/setup"
 
 export default async function SetupPage() {
