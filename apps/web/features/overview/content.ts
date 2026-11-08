@@ -347,20 +347,6 @@ export const reasons: Reason[] = [
     docs: { label: "pnpm docs", href: "https://pnpm.io/motivation" },
   },
   {
-    title: "Package cooldown against supply-chain attacks",
-    summary:
-      "minimumReleaseAge in pnpm-workspace.yaml only installs versions that have been public for 7 days.",
-    points: [
-      "Hijacked npm releases (such as the 2025 chalk/debug compromise and the Shai-Hulud worm) are usually detected and unpublished within hours or days.",
-      "A 7-day delay means a malicious release is almost always gone before it can reach your lockfile.",
-      "If an install is blocked, widen the version range so an older release qualifies. Trusted packages can be excluded explicitly.",
-    ],
-    docs: {
-      label: "pnpm minimumReleaseAge",
-      href: "https://pnpm.io/settings#minimumreleaseage",
-    },
-  },
-  {
     title: "Feature folders",
     summary:
       "Code is grouped by what it does (tasks, users, sso) rather than by what it is (components, routers).",
@@ -498,20 +484,6 @@ export const reasons: Reason[] = [
     docs: {
       label: "Drizzle docs",
       href: "https://orm.drizzle.team/docs/overview",
-    },
-  },
-  {
-    title: "TanStack Query",
-    summary:
-      "Server state on the client: caching, deduplication and refetching.",
-    points: [
-      "Requests are cached and deduplicated, and refetched when data goes stale.",
-      "Loading and error states, retries and optimistic updates come built in.",
-      "Typed query and mutation options are generated from the oRPC contract.",
-    ],
-    docs: {
-      label: "TanStack Query docs",
-      href: "https://tanstack.com/query/latest/docs/framework/react/overview",
     },
   },
   {
