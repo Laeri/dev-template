@@ -62,8 +62,7 @@ COPY --from=builder --chown=node:node /app/apps/web/.next/static ./apps/web/.nex
 USER node
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD wget -qO /dev/null --header 'Content-Type: application/json' --post-data '{}' \
-      http://127.0.0.1:3000/rpc/health/check || exit 1
+  CMD wget -qO /dev/null http://127.0.0.1:3000/rpc/health/check || exit 1
 # Run node directly (no npm/pnpm wrapper) so SIGTERM reaches the server and it
 # can drain in-flight requests.
 CMD ["node", "apps/web/server.js"]

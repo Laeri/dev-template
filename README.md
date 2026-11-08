@@ -296,7 +296,7 @@ Notes:
   env vars to the build step only. They don't end up in the runtime image.
 - `next.config.ts` sends `X-Accel-Buffering: no` so nginx doesn't buffer
   streamed responses.
-- The image healthcheck calls `health.check` (oRPC, `POST /rpc/health/check`).
+- The image healthcheck calls `health.check` (oRPC, `GET /rpc/health/check`).
 - The image runs a single instance. To run several, see the multi-server
   notes in the
   [Next.js self-hosting guide](https://nextjs.org/docs/app/guides/self-hosting)
