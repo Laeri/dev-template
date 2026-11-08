@@ -84,6 +84,63 @@ Rules of thumb:
 - The Drizzle schema stays in `db/schema/` (one file per feature), because
   all tables share one set of migrations.
 
+## Why this stack
+
+The start page (`/`) explains this in more detail, with links to each
+library's docs.
+
+- **Monorepo (pnpm workspaces + Turborepo).** Contract, server and UI change
+  in one pull request and can't drift apart. Shared lint and TypeScript
+  configs. Room for more apps (mobile, workers, docs) that reuse
+  `packages/api`. Turborepo runs tasks in order and caches them.
+- **pnpm.** Fast, disk-efficient installs from a content-addressable store.
+  Strict `node_modules`, so there are no phantom dependencies. Install scripts
+  only run for packages in `allowBuilds`.
+- **Package cooldown.** Hijacked npm releases (for example the 2025
+  chalk/debug compromise and the Shai-Hulud worm) are usually caught and
+  unpublished within hours or days. Installing only versions older than 7 days
+  keeps them out of the lockfile (see [Supply-chain cooldown](#supply-chain-cooldown)).
+- **Feature folders.** Code that changes together lives together, and a
+  feature is easy to find, review or delete (see above).
+- **oRPC, contract first.** The contract in `packages/api` is the single
+  source of truth. End-to-end types without code generation; the server fails
+  typecheck until it implements every procedure; the client is typed without
+  importing server code; errors are typed; frontend work can start against the
+  contract before the backend exists; it can be exported as OpenAPI.
+- **One client for web and mobile.** Any TypeScript app (React Native/Expo,
+  CLI, worker, another service) can import `@workspace/api` and call `/rpc`
+  with full types, including the TanStack Query helpers.
+- **Zod, shared validation.** The same schema validates the form in the
+  browser (react-hook-form zod resolver) and the request on the server. Rules
+  are written once, and types are inferred from them.
+- **TypeScript everywhere.** Types, schemas, constants and helpers are shared
+  between frontend and backend. Refactors are checked on both sides of the
+  network. One language and toolchain for the whole team.
+- **React Email.** Emails are React components, not another templating
+  language (no Handlebars, MJML or Jinja). Typed props, a preview server, and
+  HTML that works across email clients.
+- **Tailwind CSS v4.** Design tokens are CSS variables in
+  `app/globals.css`. Theming means changing variables; dark mode redefines
+  them under `.dark`. shadcn/ui uses the same tokens. No JS config.
+- **Next.js for every shape of app.** Backend only (route handlers, like
+  `/rpc`); backend + server-rendered frontend (server components); backend +
+  SPA-like client (client components with TanStack Query, like the dashboard);
+  or a static site without a server (`output: "export"`) for wikis, docs and
+  simple sites. Modes can be mixed per route.
+- **better-auth.** One integrated, self-hosted auth library, storing data in
+  your own Postgres: no per-user pricing, no lock-in. Included here: email +
+  password, TOTP 2FA, SAML SSO, admin roles. Available as plugins: magic
+  links, email OTP, passkeys, social logins (Google, GitHub, Microsoft, Apple,
+  …), organizations, API keys. Keycloak, Entra ID, Okta and other OIDC
+  providers can be added with the generic OAuth plugin or as an OIDC SSO
+  provider. Rate limiting and CSRF protection are built in.
+- **Drizzle ORM.** SQL-shaped, typed queries straight from the schema, no
+  generation step or engine binary; migrations are reviewable SQL files.
+- **TanStack Query.** Caching, deduplication, refetching, retries and
+  optimistic updates for server data on the client.
+- **shadcn/ui.** Components are source code in the repo, so you own and can
+  change them, built on accessible Radix and Base UI primitives.
+
 ## Getting started
 
 ```bash
