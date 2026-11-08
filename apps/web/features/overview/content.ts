@@ -1,229 +1,380 @@
 /** Content of the template overview page (app/page.tsx). */
 
-export type Library = { name: string; role: string; docs: string; note: string }
+import {
+  BellRingIcon,
+  ChartColumnIcon,
+  ContainerIcon,
+  DatabaseIcon,
+  FolderTreeIcon,
+  InboxIcon,
+  KeyRoundIcon,
+  ListChecksIcon,
+  MailIcon,
+  MoonIcon,
+  PaletteIcon,
+  RocketIcon,
+  SendIcon,
+  ServerIcon,
+  ShieldCheckIcon,
+  SunMoonIcon,
+  UserCogIcon,
+  WrenchIcon,
+  type LucideIcon,
+} from "lucide-react"
 
-export const stack: { group: string; libraries: Library[] }[] = [
+import type { LogoName } from "./logos"
+
+export type Library = {
+  name: string
+  role: string
+  docs: string
+  note: string
+  /** Brand logo(s) from logos.ts. */
+  logos?: LogoName[]
+  /** Fallback for libraries without a logo. */
+  icon?: LucideIcon
+}
+
+export type LayerId = "tooling" | "ui" | "api" | "database" | "auth" | "email"
+
+export type Layer = {
+  id: LayerId
+  title: string
+  icon: LucideIcon
+  description: string
+  libraries: Library[]
+}
+
+/** The stack, layer by layer. Reasons with a matching `layer` are shown with it. */
+export const stack: Layer[] = [
   {
-    group: "Framework & tooling",
+    id: "tooling",
+    title: "Framework & tooling",
+    icon: WrenchIcon,
+    description:
+      "Next.js renders the pages and serves the API from one app. pnpm and Turborepo run the monorepo.",
     libraries: [
       {
         name: "Next.js 16",
         role: "Framework",
         docs: "https://nextjs.org/docs",
         note: "App Router, server components, proxy.ts for optimistic auth redirects.",
+        logos: ["nextjs"],
       },
       {
         name: "React 19",
         role: "UI runtime",
         docs: "https://react.dev",
         note: "Server and client components.",
+        logos: ["react"],
       },
       {
         name: "TypeScript",
         role: "Language",
         docs: "https://www.typescriptlang.org/docs/",
         note: "Strict, shared config in packages/typescript-config.",
+        logos: ["typescript"],
       },
       {
         name: "pnpm",
         role: "Package manager",
         docs: "https://pnpm.io",
         note: "Workspace with a 7-day minimumReleaseAge supply-chain cooldown.",
+        logos: ["pnpm"],
       },
       {
         name: "Turborepo",
         role: "Monorepo tasks",
         docs: "https://turborepo.com/docs",
         note: "Runs dev, build, lint, typecheck and format across packages.",
+        logos: ["turborepo"],
       },
       {
         name: "ESLint + Prettier",
         role: "Lint & format",
         docs: "https://eslint.org/docs/latest/",
         note: "Shared config in packages/eslint-config, Tailwind class sorting.",
+        logos: ["eslint", "prettier"],
+      },
+      {
+        name: "Docker",
+        role: "Containers",
+        docs: "https://docs.docker.com",
+        note: "docker compose for Postgres and Mailpit, a dev container and a production Dockerfile.",
+        logos: ["docker"],
       },
     ],
   },
   {
-    group: "UI",
+    id: "ui",
+    title: "UI",
+    icon: PaletteIcon,
+    description:
+      "shadcn/ui components styled with Tailwind tokens, so one set of CSS variables themes everything.",
     libraries: [
       {
         name: "Tailwind CSS v4",
         role: "Styling",
         docs: "https://tailwindcss.com/docs",
         note: "Theme tokens in app/globals.css, light and dark mode.",
+        logos: ["tailwindcss"],
       },
       {
         name: "shadcn/ui",
         role: "Components",
         docs: "https://ui.shadcn.com/docs",
         note: "Every component installed in components/ui.",
+        logos: ["shadcn"],
       },
       {
         name: "Radix UI",
         role: "Primitives",
         docs: "https://www.radix-ui.com/primitives/docs/overview/introduction",
         note: "Accessible primitives behind most shadcn components.",
+        logos: ["radix"],
       },
       {
         name: "Base UI",
         role: "Primitives",
         docs: "https://base-ui.com/react/overview/quick-start",
         note: "Used by the combobox.",
+        logos: ["baseui"],
       },
       {
         name: "Lucide",
         role: "Icons",
         docs: "https://lucide.dev/guide/packages/lucide-react",
         note: "Icon set configured for shadcn.",
+        logos: ["lucide"],
       },
       {
         name: "next-themes",
         role: "Theming",
         docs: "https://github.com/pacocoursey/next-themes",
         note: "System theme by default; press d to toggle.",
+        icon: SunMoonIcon,
       },
       {
         name: "Sonner",
         role: "Toasts",
         docs: "https://sonner.emilkowal.ski",
         note: "Toaster mounted in components/providers.tsx.",
+        icon: BellRingIcon,
       },
       {
         name: "Recharts",
         role: "Charts",
         docs: "https://recharts.github.io/en-US/guide",
         note: "Wrapped by the shadcn chart component.",
+        icon: ChartColumnIcon,
       },
     ],
   },
   {
-    group: "Data & API",
+    id: "api",
+    title: "API, data & forms",
+    icon: ServerIcon,
+    description:
+      "A contract-first oRPC API, used through TanStack Query and validated with the same zod schemas as the forms.",
     libraries: [
       {
         name: "oRPC",
         role: "API",
         docs: "https://orpc.dev/docs/getting-started",
         note: "Contract-first: packages/api defines it, server/router.ts implements it.",
+        logos: ["orpc"],
       },
       {
         name: "TanStack Query",
         role: "Data fetching",
         docs: "https://tanstack.com/query/latest/docs/framework/react/overview",
         note: "Via @orpc/tanstack-query, devtools enabled in development.",
-      },
-      {
-        name: "TanStack Table v9",
-        role: "Tables",
-        docs: "https://tanstack.com/table/latest",
-        note: "useTable + tableFeatures, see the tasks table on the dashboard.",
+        logos: ["tanstackquery"],
       },
       {
         name: "Zod 4",
         role: "Validation",
         docs: "https://zod.dev",
         note: "Shared input/output schemas for the API and forms.",
+        logos: ["zod"],
       },
       {
         name: "React Hook Form",
         role: "Forms",
         docs: "https://react-hook-form.com/docs",
         note: "Field + Controller with the zod resolver.",
+        logos: ["reacthookform"],
       },
       {
-        name: "Drizzle ORM",
-        role: "Database",
-        docs: "https://orm.drizzle.team/docs/overview",
-        note: "Postgres schema and migrations in db/, Drizzle Studio included.",
-      },
-      {
-        name: "PostgreSQL",
-        role: "Database server",
-        docs: "https://www.postgresql.org/docs/",
-        note: "Runs via docker compose (or the dev container).",
+        name: "TanStack Table v9",
+        role: "Tables",
+        docs: "https://tanstack.com/table/latest",
+        note: "useTable + tableFeatures, see the tasks table on the dashboard.",
+        logos: ["tanstack"],
       },
       {
         name: "date-fns",
         role: "Dates",
         docs: "https://date-fns.org/docs/Getting-Started",
         note: "Date formatting and math.",
+        logos: ["datefns"],
       },
     ],
   },
   {
-    group: "Auth & email",
+    id: "database",
+    title: "Database",
+    icon: DatabaseIcon,
+    description:
+      "PostgreSQL with a typed Drizzle schema and SQL migrations checked into git.",
+    libraries: [
+      {
+        name: "Drizzle ORM",
+        role: "ORM & migrations",
+        docs: "https://orm.drizzle.team/docs/overview",
+        note: "Postgres schema and migrations in db/, Drizzle Studio included.",
+        logos: ["drizzle"],
+      },
+      {
+        name: "PostgreSQL",
+        role: "Database server",
+        docs: "https://www.postgresql.org/docs/",
+        note: "Runs via docker compose (or the dev container).",
+        logos: ["postgresql"],
+      },
+    ],
+  },
+  {
+    id: "auth",
+    title: "Authentication",
+    icon: KeyRoundIcon,
+    description:
+      "Self-hosted sessions, admin roles, optional TOTP and optional SAML, all stored in your own database.",
     libraries: [
       {
         name: "better-auth",
         role: "Authentication",
         docs: "https://www.better-auth.com/docs",
         note: "Email + password, admin plugin, TOTP two-factor.",
+        logos: ["betterauth"],
       },
       {
         name: "@better-auth/sso",
         role: "SAML",
         docs: "https://www.better-auth.com/docs/plugins/sso",
         note: "Optional SAML providers, managed by admins at runtime.",
+        logos: ["betterauth"],
       },
+    ],
+  },
+  {
+    id: "email",
+    title: "Email",
+    icon: MailIcon,
+    description:
+      "Templates are React components, sent over SMTP and caught by Mailpit in development.",
+    libraries: [
       {
         name: "React Email",
         role: "Email templates",
         docs: "https://react.email/docs",
         note: "Templates in emails/, preview server on :3001.",
+        logos: ["reactemail"],
       },
       {
         name: "Nodemailer",
         role: "Email delivery",
         docs: "https://nodemailer.com",
-        note: "SMTP; Mailpit catches mail locally on :8025.",
+        note: "Sends through any SMTP server.",
+        icon: SendIcon,
+      },
+      {
+        name: "Mailpit",
+        role: "Local inbox",
+        docs: "https://mailpit.axllent.org/docs/",
+        note: "Catches every email sent in development, on localhost:8025.",
+        icon: InboxIcon,
       },
     ],
   },
 ]
 
-export const preconfigured: { title: string; body: string }[] = [
+/** The logo strip under the hero: a quick visual summary of the stack. */
+export const heroLogos: LogoName[] = [
+  "nextjs",
+  "react",
+  "typescript",
+  "tailwindcss",
+  "shadcn",
+  "orpc",
+  "tanstackquery",
+  "zod",
+  "drizzle",
+  "postgresql",
+  "betterauth",
+  "reactemail",
+  "pnpm",
+  "turborepo",
+]
+
+export const preconfigured: {
+  title: string
+  icon: LucideIcon
+  body: string
+}[] = [
   {
     title: "First-run setup",
+    icon: RocketIcon,
     body: "Public sign-up is disabled. On a fresh database, /setup creates the first admin and then locks itself.",
   },
   {
     title: "Admin section",
+    icon: UserCogIcon,
     body: "Admins create password users, toggle security settings and manage SAML providers under /admin.",
   },
   {
     title: "Optional TOTP for admins",
+    icon: ShieldCheckIcon,
     body: "Off by default. When enabled, password admins must enrol an authenticator app before they can continue.",
   },
   {
     title: "Optional SAML SSO",
+    icon: KeyRoundIcon,
     body: "Add identity providers at runtime. SAML users are provisioned on first sign-in and never linked into admin accounts.",
   },
   {
     title: "Contract-first API",
+    icon: ServerIcon,
     body: "packages/api holds the zod + oRPC contract. Procedures are protected by the authed and adminOnly middlewares.",
   },
   {
     title: "Example feature",
+    icon: ListChecksIcon,
     body: "A tasks CRUD (contract, router, Drizzle table, table UI and create dialog) shows the full data flow end to end.",
   },
   {
     title: "Database migrations",
+    icon: DatabaseIcon,
     body: "Drizzle schema in db/schema with generated SQL migrations. Run pnpm db:migrate to apply them.",
   },
   {
     title: "Transactional email",
+    icon: MailIcon,
     body: "Password reset and verification templates, sent through SMTP and captured by Mailpit in development.",
   },
   {
     title: "Dev container",
+    icon: ContainerIcon,
     body: "Node, pnpm, Postgres and Mailpit in one container. Creates .env, installs and migrates on first start.",
   },
   {
     title: "Feature folders",
+    icon: FolderTreeIcon,
     body: "Each feature in apps/web/features/<name> holds its components, oRPC procedures and helpers.",
   },
   {
     title: "Dark mode",
+    icon: MoonIcon,
     body: "System preference by default, persisted per browser. Press d anywhere to toggle.",
   },
 ]
@@ -313,6 +464,8 @@ export const features: { name: string; contains: string }[] = [
 
 export type Reason = {
   title: string
+  /** Where the reason is shown: with a stack layer or with the structure. */
+  layer: LayerId | "structure"
   summary: string
   points: string[]
   /** Advantages over a SPA + Spring Boot setup, where applicable. */
@@ -328,6 +481,7 @@ export const springBootFit =
 export const reasons: Reason[] = [
   {
     title: "Monorepo",
+    layer: "tooling",
     summary:
       "The web app and the shared API contract live in one repository, built by Turborepo.",
     comparison:
@@ -345,6 +499,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "pnpm",
+    layer: "tooling",
     summary:
       "A fast, disk-efficient package manager with first-class workspaces.",
     comparison:
@@ -358,6 +513,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "Feature folders",
+    layer: "structure",
     summary:
       "Code is grouped by what it does (tasks, users, sso) rather than by what it is (components, routers).",
     comparison:
@@ -371,6 +527,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "oRPC, contract first",
+    layer: "api",
     summary:
       "packages/api defines every procedure (input, output, errors) before it is implemented.",
     comparison:
@@ -390,6 +547,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "One client for web and mobile",
+    layer: "api",
     summary:
       "The same contract and typed client can be used by any TypeScript app, not only this one.",
     comparison:
@@ -406,6 +564,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "Zod, shared validation",
+    layer: "api",
     summary:
       "The same zod schema validates a form in the browser and the request on the server.",
     comparison:
@@ -420,6 +579,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "TypeScript everywhere",
+    layer: "tooling",
     summary:
       "Frontend and backend are written in the same language, so code can be shared across the boundary.",
     comparison:
@@ -436,6 +596,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "React Email",
+    layer: "email",
     summary:
       "Emails are React components, not templates in yet another templating language.",
     comparison:
@@ -450,6 +611,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "Tailwind CSS v4",
+    layer: "ui",
     summary:
       "Design tokens are CSS variables, configured in CSS rather than JavaScript.",
     comparison:
@@ -467,6 +629,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "Next.js, one framework for every shape of app",
+    layer: "tooling",
     summary:
       "The same project can be a backend, a server-rendered app, a SPA-like client or a static site.",
     comparison:
@@ -485,6 +648,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "better-auth",
+    layer: "auth",
     summary:
       "One integrated, self-hosted auth library instead of stitching together several services.",
     comparison:
@@ -503,6 +667,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "Drizzle ORM",
+    layer: "database",
     summary: "A typed, SQL-shaped ORM with plain SQL migrations.",
     comparison:
       "JPA/Hibernate hides SQL behind entity mapping, which brings N+1 queries, lazy-loading surprises (LazyInitializationException) and a separate migration tool (Flyway, Liquibase) kept in sync by hand. Here queries are explicit and migrations are generated from the schema.",
@@ -518,6 +683,7 @@ export const reasons: Reason[] = [
   },
   {
     title: "shadcn/ui",
+    layer: "ui",
     summary:
       "Components are copied into the repo as source, not installed as a dependency.",
     comparison:
