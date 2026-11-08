@@ -17,8 +17,8 @@ export const task = pgTable(
     title: text("title").notNull(),
     status: taskStatus("status").default("todo").notNull(),
     priority: taskPriority("priority").default("medium").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
