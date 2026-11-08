@@ -16,5 +16,4 @@ fi
 
 pnpm install --frozen-lockfile
 
-until pg_isready -h postgres -U postgres -q; do sleep 1; done
-pnpm db:migrate
+# Migrations and the dev server run in post-start.sh, on every start.

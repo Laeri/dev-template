@@ -5,6 +5,9 @@ services:
     build:
       context: .devcontainer
     command: sleep infinity
+    # An init process as PID 1 reaps the background dev server's processes
+    # when they exit; `sleep` doesn't, so they'd linger as zombies.
+    init: true
     # Published by Docker so localhost works with any client (devcontainer
     # CLI, VS Code, JetBrains), not only editors that honor forwardPorts.
     # Loopback only, so nothing is exposed to the LAN.
