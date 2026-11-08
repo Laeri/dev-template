@@ -5,11 +5,9 @@
   "runServices": ["app", "postgres", "mailpit"],
   "workspaceFolder": "/workspace",
   "remoteUser": "node",
-  "forwardPorts": [3000, 3001, "mailpit:8025"],
   "portsAttributes": {
     "3000": { "label": "web" },
-    "3001": { "label": "email previews" },
-    "mailpit:8025": { "label": "mailpit" }
+    "3001": { "label": "email previews" }
   },
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {

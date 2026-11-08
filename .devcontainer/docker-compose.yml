@@ -5,6 +5,12 @@ services:
     build:
       context: .devcontainer
     command: sleep infinity
+    # Published by Docker so localhost works with any client (devcontainer
+    # CLI, VS Code, JetBrains), not only editors that honor forwardPorts.
+    # Loopback only, so nothing is exposed to the LAN.
+    ports:
+      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:3001:3001"
     volumes:
       - .:/workspace:cached
       # Keep the container's node_modules apart from the host's: pnpm refuses
@@ -26,12 +32,13 @@ services:
       - postgres
       - mailpit
 
-  # Don't publish to the host; VS Code forwards the ports it needs. This also
-  # avoids clashing with `docker compose up` run from the host.
+  # Postgres stays internal, and mailpit's UI uses 8026 instead of 8025, so
+  # this can run alongside `docker compose up` from the host.
   postgres:
     ports: !reset []
   mailpit:
-    ports: !reset []
+    ports: !override
+      - "127.0.0.1:8026:8025"
 
 volumes:
   node-modules-root:

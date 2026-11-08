@@ -262,10 +262,23 @@ Container"). It runs Node 24 + pnpm alongside the Postgres and Mailpit services
 from `docker-compose.yml`, creates `apps/web/.env` with a fresh secret if it is
 missing, installs dependencies and runs migrations. Then run `pnpm dev`. Inside
 the container `DATABASE_URL` and `SMTP_HOST` point at the `postgres` and
-`mailpit` services. Ports 3000, 3001 and Mailpit's 8025 are forwarded.
-node_modules live in container volumes, so host and container installs don't
+`mailpit` services. The app's ports 3000 and 3001 are published on
+`127.0.0.1`, and Mailpit's UI is on http://localhost:8026 (not 8025, so it can
+run alongside `docker compose up` from the host). Postgres is only reachable
+inside the container. node_modules live in container volumes, so host and container installs don't
 clash. When you add a workspace package, add a volume for its node_modules in
 `.devcontainer/docker-compose.yml`.
+
+Without VS Code, use the [devcontainer CLI](https://github.com/devcontainers/cli):
+
+```bash
+devcontainer up --workspace-folder .                # build, start, install, migrate
+devcontainer exec --workspace-folder . pnpm dev     # http://localhost:3000
+devcontainer exec --workspace-folder . bash         # shell in the container
+```
+
+After changing anything in `.devcontainer/`, recreate the container with
+`devcontainer up --workspace-folder . --remove-existing-container`.
 
 ## Production (self-hosted)
 
