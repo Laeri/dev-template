@@ -2,52 +2,57 @@
 
 A pnpm + Turborepo monorepo with:
 
-| Concern       | Tool                                                                           |
-| ------------- | ------------------------------------------------------------------------------ |
-| Framework     | [Next.js 16](https://nextjs.org) (App Router, `proxy.ts`)                      |
-| Styling       | [Tailwind CSS v4](https://tailwindcss.com)                                     |
-| UI            | [shadcn/ui](https://ui.shadcn.com), every component, in `packages/ui`          |
-| API           | [oRPC](https://orpc.dev), contract-first (`packages/api`)                      |
-| Data fetching | [TanStack Query](https://tanstack.com/query) via `@orpc/tanstack-query`        |
-| Tables        | [TanStack Table v9](https://tanstack.com/table)                                |
-| Forms         | [React Hook Form](https://react-hook-form.com) + zod resolver                  |
-| Validation    | [Zod 4](https://zod.dev)                                                       |
-| Auth          | [better-auth](https://better-auth.com) (email + password, verification, reset) |
-| Database      | [Drizzle ORM](https://orm.drizzle.team) + Postgres                             |
-| Email         | [React Email](https://react.email) + Nodemailer                                |
+| Concern       | Tool                                                                             |
+| ------------- | -------------------------------------------------------------------------------- |
+| Framework     | [Next.js 16](https://nextjs.org) (App Router, `proxy.ts`)                        |
+| Styling       | [Tailwind CSS v4](https://tailwindcss.com)                                       |
+| UI            | [shadcn/ui](https://ui.shadcn.com), every component, in `apps/web/components/ui` |
+| API           | [oRPC](https://orpc.dev), contract-first (`packages/api`)                        |
+| Data fetching | [TanStack Query](https://tanstack.com/query) via `@orpc/tanstack-query`          |
+| Tables        | [TanStack Table v9](https://tanstack.com/table)                                  |
+| Forms         | [React Hook Form](https://react-hook-form.com) + zod resolver                    |
+| Validation    | [Zod 4](https://zod.dev)                                                         |
+| Auth          | [better-auth](https://better-auth.com) (email + password, verification, reset)   |
+| Database      | [Drizzle ORM](https://orm.drizzle.team) + Postgres                               |
+| Email         | [React Email](https://react.email) + Nodemailer                                  |
 
 ## Structure
 
 ```
 apps/
-  web/                 Next.js app
-    app/rpc/           oRPC HTTP handler (/rpc/*)
-    app/api/auth/      better-auth handler (/api/auth/*)
-    server/            oRPC router implementing the contract
-    lib/               auth, auth-client, orpc client, email, env
-    proxy.ts           optimistic auth redirect for /dashboard
+  web/                   Next.js app (everything that runs on the server or in the browser)
+    app/                 routes; app/globals.css holds the Tailwind + shadcn theme
+    app/rpc/             oRPC HTTP handler (/rpc/*)
+    app/api/auth/        better-auth handler (/api/auth/*)
+    components/ui/       shadcn/ui components
+    db/                  Drizzle schema, client, migrations
+    emails/              React Email templates
+    server/              oRPC router implementing the contract
+    lib/                 auth, auth-client, orpc client, email sending, env
+    proxy.ts             optimistic auth redirect for /dashboard
 packages/
-  api/                 oRPC contract + shared zod schemas (no server code)
-  db/                  Drizzle schema, client, migrations
-  email/               React Email templates + render helpers
-  ui/                  shadcn/ui components, styles, hooks
-  eslint-config/       shared ESLint config
-  typescript-config/   shared tsconfig
+  api/                   oRPC contract + zod input/output schemas (no server code)
+  eslint-config/         shared ESLint config
+  typescript-config/     shared tsconfig
 ```
 
-The contract in `packages/api` is the single source of truth: the server
-implements it with `implement(contract)` and the client is typed from it
-(`ContractRouterClient<typeof contract>`), so the client never imports
-server code. Its zod schemas are also used by the forms (`zodResolver`).
+`packages/api` is the only shared package, and that is deliberate: it is the
+wire contract. The server implements it with `implement(contract)` and the
+client is typed from it (`ContractRouterClient<typeof contract>`), so the
+client never imports server code. It depends only on `zod` and
+`@orpc/contract`, and holds only what crosses the wire (inputs, outputs,
+errors). Database tables live in `apps/web/db` and are mapped to these shapes
+in the router, so the contract does not change when the schema does.
 
 ## Getting started
 
 ```bash
-cp .env.example .env               # then set BETTER_AUTH_SECRET (openssl rand -base64 32)
-docker compose up -d               # Postgres on :5432, Mailpit on :1025 / UI on :8025
+cp apps/web/.env.example apps/web/.env   # then set BETTER_AUTH_SECRET (openssl rand -base64 32)
+docker compose up -d                     # Postgres on :5432, Mailpit on :1025 / UI on :8025
 pnpm install
 pnpm db:migrate
-pnpm dev                           # web on :3000, email preview on :3001
+pnpm dev                                 # http://localhost:3000
+pnpm email:dev                           # email previews on http://localhost:3001
 ```
 
 Sign up at http://localhost:3000/sign-up. The verification email shows up in
@@ -69,9 +74,9 @@ Mailpit at http://localhost:8025.
 
 ## Common tasks
 
-**Add a shadcn component**: `cd packages/ui && pnpm dlx shadcn@latest add <name>`
+**Add a shadcn component**: `cd apps/web && pnpm dlx shadcn@latest add <name>`
 (all components are already installed; use this for updates or registry items).
-Import as `@workspace/ui/components/<name>`.
+Import as `@/components/ui/<name>`.
 
 **Add an API procedure**:
 
@@ -80,11 +85,10 @@ Import as `@workspace/ui/components/<name>`.
 3. Call it from the client with `useQuery(orpc.<ns>.<proc>.queryOptions(...))`
    or `useMutation(orpc.<ns>.<proc>.mutationOptions())`.
 
-**Add an email**: create `packages/email/emails/<name>.tsx` with `PreviewProps`,
-export a `render…` helper from `packages/email/src/index.tsx`, and send it with
-`sendEmail()` from `apps/web/lib/email.ts`. Preview with `pnpm --filter @workspace/email dev`.
+**Add an email**: create `apps/web/emails/<name>.tsx` with `PreviewProps`, then
+add a `send…Email` helper in `apps/web/lib/email.tsx` that calls `sendEmail()`.
 
-**Change the database schema**: edit `packages/db/src/schema/*`, then
+**Change the database schema**: edit `apps/web/db/schema/*`, then
 `pnpm db:generate && pnpm db:migrate`.
 
 ## Supply-chain cooldown
