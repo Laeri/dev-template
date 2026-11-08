@@ -28,7 +28,7 @@ async function hasPasswordAccount(userId: string) {
 /**
  * TOTP is required only when the `requireAdminTwoFactor` setting is on (off by
  * default), and then only for admins that have a password (`credential`)
- * account. SAML/LDAP users and regular password users are always exempt.
+ * account. SAML users and regular password users are always exempt.
  */
 export async function requiresTwoFactor(user: TwoFactorSubject) {
   if (user.role !== "admin") return false

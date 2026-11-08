@@ -10,7 +10,7 @@ export const adminUserSchema = z.object({
   email: z.string(),
   role: userRoleSchema,
   twoFactorEnabled: z.boolean(),
-  /** Account providers, e.g. "credential" (password), "ldap", or a SAML provider id. */
+  /** Account providers, e.g. "credential" (password) or a SAML provider id. */
   signInMethods: z.array(z.string()),
   createdAt: z.date(),
 })

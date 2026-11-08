@@ -45,7 +45,7 @@ export function SecuritySettings() {
         <CardHeader>
           <CardTitle>Two-factor authentication</CardTitle>
           <CardDescription>
-            Applies to admins who sign in with email and password. SAML, LDAP
+            Applies to admins who sign in with email and password. SAML users
             and regular users are never asked for a code.
           </CardDescription>
         </CardHeader>

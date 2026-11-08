@@ -58,7 +58,6 @@ const helper = createColumnHelper<typeof features, AdminUser>()
 
 const methodLabels: Record<string, string> = {
   credential: "Password",
-  ldap: "LDAP",
 }
 
 const emptyUsers: AdminUser[] = []

@@ -9,7 +9,6 @@ const items = [
   { href: "/admin/users", label: "Users" },
   { href: "/admin/security", label: "Security" },
   { href: "/admin/saml", label: "SAML" },
-  { href: "/admin/ldap", label: "LDAP" },
 ]
 
 export function AdminNav() {
