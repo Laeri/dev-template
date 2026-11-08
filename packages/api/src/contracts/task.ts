@@ -1,4 +1,3 @@
-import { oc } from "@orpc/contract"
 import { z } from "zod"
 
 import {
@@ -6,9 +5,9 @@ import {
   taskSchema,
   updateTaskInputSchema,
 } from "../schemas/task"
+import { authedContract } from "./base"
 
-const base = oc.errors({
-  UNAUTHORIZED: { message: "You must be signed in" },
+const base = authedContract.errors({
   NOT_FOUND: { message: "Task not found" },
 })
 

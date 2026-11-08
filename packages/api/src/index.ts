@@ -5,6 +5,7 @@ import type {
 } from "@orpc/contract"
 
 import { healthContract } from "./contracts/health"
+import { setupContract } from "./contracts/setup"
 import { taskContract } from "./contracts/task"
 
 /**
@@ -12,6 +13,7 @@ import { taskContract } from "./contracts/task"
  */
 export const contract = {
   health: healthContract,
+  setup: setupContract,
   task: taskContract,
 }
 
@@ -20,4 +22,5 @@ export type ApiClient = ContractRouterClient<Contract>
 export type ApiInputs = InferContractRouterInputs<Contract>
 export type ApiOutputs = InferContractRouterOutputs<Contract>
 
+export * from "./schemas/setup"
 export * from "./schemas/task"
