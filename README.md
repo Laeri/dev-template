@@ -59,6 +59,18 @@ Open http://localhost:3000. On a fresh database every page redirects to
 `/setup`, where you create the first admin account. Emails (e.g. password
 resets) show up in Mailpit at http://localhost:8025.
 
+### Dev container
+
+Alternatively, open the repo in a dev container (VS Code: "Reopen in
+Container"). It runs Node 24 + pnpm alongside the Postgres and Mailpit services
+from `docker-compose.yml`, creates `apps/web/.env` with a fresh secret if it is
+missing, installs dependencies and runs migrations. Then run `pnpm dev`. Inside
+the container `DATABASE_URL` and `SMTP_HOST` point at the `postgres` and
+`mailpit` services. Ports 3000, 3001 and Mailpit's 8025 are forwarded.
+node_modules live in container volumes, so host and container installs don't
+clash. When you add a workspace package, add a volume for its node_modules in
+`.devcontainer/docker-compose.yml`.
+
 ## Authentication
 
 Public sign-up is **disabled** (`emailAndPassword.disableSignUp` in
