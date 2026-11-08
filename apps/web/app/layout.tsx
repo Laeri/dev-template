@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google"
 
-import "@workspace/ui/globals.css"
-import { cn } from "@workspace/ui/lib/utils"
+import "./globals.css"
+import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
 
 import { Providers } from "@/components/providers"

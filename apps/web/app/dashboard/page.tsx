@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 import { SignOutButton } from "@/components/auth/sign-out-button"
 import { CreateTaskDialog } from "@/components/tasks/create-task-dialog"

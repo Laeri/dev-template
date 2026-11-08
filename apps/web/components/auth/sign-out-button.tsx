@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@/components/ui/button"
 import { useQueryClient } from "@tanstack/react-query"
 import { LogOutIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
