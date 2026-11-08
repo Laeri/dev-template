@@ -1,17 +1,24 @@
 {
   "name": "nextjs-template",
+  "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "typecheck": "turbo typecheck"
+  },
+  "devDependencies": {
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "prettier": "^3",
+    "prettier-plugin-tailwindcss": "^0.8",
+    "turbo": "^2",
+    "typescript": "^5"
+  },
   "packageManager": "pnpm@11.3.0",
   "engines": {
     "node": ">=22"
-  },
-  "scripts": {
-    "dev": "pnpm --filter web dev",
-    "build": "pnpm -r build",
-    "lint": "pnpm -r lint",
-    "typecheck": "pnpm -r typecheck",
-    "email:dev": "pnpm --filter @repo/email dev",
-    "db:generate": "pnpm --filter web db:generate",
-    "db:migrate": "pnpm --filter web db:migrate"
   }
 }
