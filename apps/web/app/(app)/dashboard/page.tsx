@@ -1,8 +1,10 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import Link from "next/link"
 
 import { SignOutButton } from "@/components/auth/sign-out-button"
 import { CreateTaskDialog } from "@/components/tasks/create-task-dialog"
 import { TasksTable } from "@/components/tasks/tasks-table"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import { requireSession } from "@/lib/session"
 
 export default async function DashboardPage() {
@@ -18,6 +20,11 @@ export default async function DashboardPage() {
           <p className="text-sm font-medium">{user.name}</p>
           <p className="text-xs text-muted-foreground">{user.email}</p>
         </div>
+        {user.role === "admin" && (
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/admin">Admin</Link>
+          </Button>
+        )}
         <SignOutButton />
       </header>
       <main className="flex flex-col gap-4">
