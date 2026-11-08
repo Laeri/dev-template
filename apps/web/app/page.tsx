@@ -1,19 +1,52 @@
 import { Button } from "@workspace/ui/components/button"
+import Link from "next/link"
 
-export default function Page() {
+import { getSession } from "@/lib/session"
+
+const stack = [
+  "Next.js",
+  "Tailwind v4",
+  "shadcn/ui",
+  "oRPC",
+  "TanStack Query",
+  "TanStack Table",
+  "React Hook Form",
+  "Zod",
+  "better-auth",
+  "Drizzle",
+  "React Email",
+]
+
+export default async function Page() {
+  const session = await getSession()
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="text-muted-foreground font-mono text-xs">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 p-6 text-center">
+      <h1 className="text-4xl font-semibold tracking-tight">
+        Next.js monorepo template
+      </h1>
+      <p className="text-muted-foreground max-w-lg text-balance">
+        {stack.join(" · ")}
+      </p>
+      <div className="flex gap-3">
+        {session ? (
+          <Button asChild>
+            <Link href="/dashboard">Go to dashboard</Link>
+          </Button>
+        ) : (
+          <>
+            <Button asChild>
+              <Link href="/sign-up">Get started</Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link href="/sign-in">Sign in</Link>
+            </Button>
+          </>
+        )}
       </div>
+      <p className="text-muted-foreground font-mono text-xs">
+        Press <kbd>d</kbd> to toggle dark mode
+      </p>
     </div>
   )
 }

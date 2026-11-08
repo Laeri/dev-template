@@ -1,0 +1,32 @@
+import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar"
+
+import { SignOutButton } from "@/components/auth/sign-out-button"
+import { CreateTaskDialog } from "@/components/tasks/create-task-dialog"
+import { TasksTable } from "@/components/tasks/tasks-table"
+import { requireSession } from "@/lib/session"
+
+export default async function DashboardPage() {
+  const { user } = await requireSession()
+
+  return (
+    <div className="mx-auto flex min-h-svh max-w-4xl flex-col gap-8 p-6">
+      <header className="flex items-center gap-3">
+        <Avatar>
+          <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div className="mr-auto">
+          <p className="text-sm font-medium">{user.name}</p>
+          <p className="text-muted-foreground text-xs">{user.email}</p>
+        </div>
+        <SignOutButton />
+      </header>
+      <main className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold">Tasks</h1>
+          <CreateTaskDialog />
+        </div>
+        <TasksTable />
+      </main>
+    </div>
+  )
+}

@@ -1,12 +1,15 @@
-import { onError } from "@orpc/server"
+import { onError, ORPCError } from "@orpc/server"
 import { RPCHandler } from "@orpc/server/fetch"
 
 import { router } from "@/server/router"
 
 const handler = new RPCHandler(router, {
   interceptors: [
+    // Log only unexpected failures, not 4xx errors like UNAUTHORIZED or validation.
     onError((error) => {
-      console.error(error)
+      if (!(error instanceof ORPCError) || error.status >= 500) {
+        console.error(error)
+      }
     }),
   ],
 })
