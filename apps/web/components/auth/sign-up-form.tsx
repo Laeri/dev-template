@@ -81,7 +81,9 @@ export function SignUpForm() {
     <Card>
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
-        <CardDescription>Sign up with your email and a password.</CardDescription>
+        <CardDescription>
+          Sign up with your email and a password.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form id="sign-up-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -124,7 +126,7 @@ export function SignUpForm() {
           {form.formState.isSubmitting && <Spinner />}
           Create account
         </Button>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
           <Link href="/sign-in" className="text-foreground underline">
             Sign in

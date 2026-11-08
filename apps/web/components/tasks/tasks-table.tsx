@@ -121,7 +121,7 @@ export function TasksTable() {
   })
 
   if (isError) {
-    return <p className="text-destructive text-sm">{error.message}</p>
+    return <p className="text-sm text-destructive">{error.message}</p>
   }
 
   return (
@@ -180,7 +180,7 @@ export function TasksTable() {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="text-muted-foreground h-24 text-center"
+                  className="h-24 text-center text-muted-foreground"
                 >
                   No tasks yet.
                 </TableCell>
@@ -190,7 +190,7 @@ export function TasksTable() {
         </Table>
       </div>
       <div className="flex items-center justify-end gap-2">
-        <span className="text-muted-foreground mr-auto text-sm">
+        <span className="mr-auto text-sm text-muted-foreground">
           Page {table.state.pagination.pageIndex + 1} of{" "}
           {Math.max(table.getPageCount(), 1)}
         </span>

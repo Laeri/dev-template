@@ -17,13 +17,15 @@ export const router = os.router({
     check: os.health.check.handler(() => ({ status: "ok", time: new Date() })),
   },
   task: {
-    list: os.task.list.use(authed).handler(({ context }) =>
-      db
-        .select(taskColumns)
-        .from(schema.task)
-        .where(eq(schema.task.userId, context.user.id))
-        .orderBy(desc(schema.task.createdAt))
-    ),
+    list: os.task.list
+      .use(authed)
+      .handler(({ context }) =>
+        db
+          .select(taskColumns)
+          .from(schema.task)
+          .where(eq(schema.task.userId, context.user.id))
+          .orderBy(desc(schema.task.createdAt))
+      ),
 
     create: os.task.create.use(authed).handler(async ({ input, context }) => {
       const [created] = await db

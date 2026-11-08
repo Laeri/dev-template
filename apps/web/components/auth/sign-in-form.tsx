@@ -111,7 +111,7 @@ export function SignInForm() {
           {form.formState.isSubmitting && <Spinner />}
           Sign in
         </Button>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-sm text-muted-foreground">
           No account?{" "}
           <Link href="/sign-up" className="text-foreground underline">
             Sign up

@@ -16,7 +16,7 @@ export default async function DashboardPage() {
         </Avatar>
         <div className="mr-auto">
           <p className="text-sm font-medium">{user.name}</p>
-          <p className="text-muted-foreground text-xs">{user.email}</p>
+          <p className="text-xs text-muted-foreground">{user.email}</p>
         </div>
         <SignOutButton />
       </header>

@@ -25,7 +25,7 @@ export default async function Page() {
       <h1 className="text-4xl font-semibold tracking-tight">
         Next.js monorepo template
       </h1>
-      <p className="text-muted-foreground max-w-lg text-balance">
+      <p className="max-w-lg text-balance text-muted-foreground">
         {stack.join(" · ")}
       </p>
       <div className="flex gap-3">
@@ -44,7 +44,7 @@ export default async function Page() {
           </>
         )}
       </div>
-      <p className="text-muted-foreground font-mono text-xs">
+      <p className="font-mono text-xs text-muted-foreground">
         Press <kbd>d</kbd> to toggle dark mode
       </p>
     </div>

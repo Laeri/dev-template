@@ -16,14 +16,20 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
-      await sendEmail(user.email, await renderResetPassword({ name: user.name, url }))
+      await sendEmail(
+        user.email,
+        await renderResetPassword({ name: user.name, url })
+      )
     },
   },
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      await sendEmail(user.email, await renderVerifyEmail({ name: user.name, url }))
+      await sendEmail(
+        user.email,
+        await renderVerifyEmail({ name: user.name, url })
+      )
     },
   },
   // Must be the last plugin: lets server actions set auth cookies.
