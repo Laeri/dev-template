@@ -15,7 +15,6 @@ loadEnvConfig(
 const nextConfig: NextConfig = {
   transpilePackages: [
     "@workspace/api",
-    "@workspace/email",
   ],
 }
 

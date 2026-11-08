@@ -1,12 +1,11 @@
 import "server-only"
 
-import { renderResetPassword, renderVerifyEmail } from "@workspace/email"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { nextCookies } from "better-auth/next-js"
 
 import { db, schema } from "@/db"
-import { sendEmail } from "@/lib/email"
+import { sendResetPasswordEmail, sendVerifyEmail } from "@/lib/email"
 import { env } from "@/lib/env"
 
 export const auth = betterAuth({
@@ -16,20 +15,14 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
-      await sendEmail(
-        user.email,
-        await renderResetPassword({ name: user.name, url })
-      )
+      await sendResetPasswordEmail(user.email, { name: user.name, url })
     },
   },
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      await sendEmail(
-        user.email,
-        await renderVerifyEmail({ name: user.name, url })
-      )
+      await sendVerifyEmail(user.email, { name: user.name, url })
     },
   },
   // Must be the last plugin: lets server actions set auth cookies.
