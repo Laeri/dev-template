@@ -12,7 +12,7 @@ A pnpm + Turborepo monorepo with:
 | Tables        | [TanStack Table v9](https://tanstack.com/table)                                  |
 | Forms         | [React Hook Form](https://react-hook-form.com) + zod resolver                    |
 | Validation    | [Zod 4](https://zod.dev)                                                         |
-| Auth          | [better-auth](https://better-auth.com) (email + password, verification, reset)   |
+| Auth          | [better-auth](https://better-auth.com): password, TOTP 2FA, SAML, admin          |
 | Database      | [Drizzle ORM](https://orm.drizzle.team) + Postgres                               |
 | Email         | [React Email](https://react.email) + Nodemailer                                  |
 
@@ -27,9 +27,9 @@ apps/
     components/ui/       shadcn/ui components
     db/                  Drizzle schema, client, migrations
     emails/              React Email templates
-    server/              oRPC router implementing the contract
-    lib/                 auth, auth-client, orpc client, email sending, env
-    proxy.ts             optimistic auth redirect for /dashboard
+    server/              oRPC router (server/routers/*) implementing the contract
+    lib/                 auth, sessions, 2FA rule, settings, orpc client, email, env
+    proxy.ts             optimistic auth redirect for /dashboard, /admin
 packages/
   api/                   oRPC contract + zod input/output schemas (no server code)
   eslint-config/         shared ESLint config
@@ -55,14 +55,52 @@ pnpm dev                                 # http://localhost:3000
 pnpm email:dev                           # email previews on http://localhost:3001
 ```
 
-Sign up at http://localhost:3000/sign-up. The verification email shows up in
-Mailpit at http://localhost:8025.
+Open http://localhost:3000. On a fresh database every page redirects to
+`/setup`, where you create the first admin account. Emails (e.g. password
+resets) show up in Mailpit at http://localhost:8025.
+
+## Authentication
+
+Public sign-up is **disabled** (`emailAndPassword.disableSignUp` in
+`apps/web/lib/auth.ts`). Accounts come from three places:
+
+| Source          | How users are created                       | Role          |
+| --------------- | ------------------------------------------- | ------------- |
+| `/setup`        | First admin, only while no admin exists     | admin         |
+| Admin → Users   | Admin creates an email + password user      | admin or user |
+| SAML (optional) | Created automatically on first SAML sign-in | user          |
+
+**Two-factor authentication (TOTP).** Admin → Security has a switch
+"Require TOTP for password admins". It is **off by default**. When it's on,
+admins who sign in with a password must enrol an authenticator app before
+they can use the app, and they can't turn 2FA off again. SAML users and
+regular password users are never asked for a code. To turn the switch on you
+need TOTP on your own account first (Admin → Security → Set up two-factor).
+
+**SAML (Admin → SAML), optional.** Nothing to configure unless you want SSO;
+until a provider exists the sign-in page shows only email + password. To add
+one, enter your IdP's entity ID, SSO URL and signing certificate (or metadata
+XML), plus the email domains it serves. Each provider card shows the values to
+configure in the IdP:
+
+- ACS / Reply URL: `{BETTER_AUTH_URL}/api/auth/sso/saml2/sp/acs/{providerId}`
+- SP metadata: `{BETTER_AUTH_URL}/api/auth/sso/saml2/sp/metadata?providerId={providerId}`
+
+Users then pick "SSO" on the sign-in page and enter their work email.
+
+**Account linking.** SAML identities are never attached to an existing admin
+account (that would bypass the admin's password and TOTP), and existing
+password users aren't linked implicitly either. A new SAML identity whose
+email is already taken is rejected.
+
+LDAP sign-in lives on the `feat/ldap` branch.
 
 ## Scripts
 
 | Script             | What it does                                      |
 | ------------------ | ------------------------------------------------- |
-| `pnpm dev`         | Run every app's dev server (turbo)                |
+| `pnpm dev`         | Run the web app (turbo)                           |
+| `pnpm email:dev`   | React Email preview server on :3001               |
 | `pnpm build`       | Build everything                                  |
 | `pnpm lint`        | ESLint across the workspace                       |
 | `pnpm typecheck`   | `tsc --noEmit` across the workspace               |
@@ -81,7 +119,9 @@ Import as `@/components/ui/<name>`.
 **Add an API procedure**:
 
 1. Define it in `packages/api/src/contracts/*` (input/output zod schemas, errors).
-2. Implement it in `apps/web/server/router.ts`. TypeScript fails until you do.
+2. Implement it in `apps/web/server/routers/*` (wire it up in
+   `server/router.ts`). Protect it with the `authed` or `adminOnly`
+   middleware from `server/orpc.ts`. TypeScript fails until you implement it.
 3. Call it from the client with `useQuery(orpc.<ns>.<proc>.queryOptions(...))`
    or `useMutation(orpc.<ns>.<proc>.mutationOptions())`.
 
