@@ -2,6 +2,7 @@ import "server-only"
 
 import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
+import { connection } from "next/server"
 
 import { db, schema } from "@/db"
 
@@ -11,6 +12,8 @@ let setupComplete = false
 
 /** True once at least one admin account exists. */
 export async function isSetupComplete() {
+  // Must run per request, never at build time (prerendering).
+  await connection()
   if (setupComplete) return true
   const [admin] = await db
     .select({ id: schema.user.id })
