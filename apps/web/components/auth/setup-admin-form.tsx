@@ -77,8 +77,9 @@ export function SetupAdminForm() {
       router.push("/sign-in")
       return
     }
-    // Password admins must enrol in TOTP before using the app.
-    router.push("/two-factor/setup")
+    // If admin TOTP is required (off by default), requireSession() sends
+    // the admin on to /two-factor/setup.
+    router.push("/dashboard")
     router.refresh()
   }
 
@@ -88,10 +89,7 @@ export function SetupAdminForm() {
     <Card>
       <CardHeader>
         <CardTitle>Welcome</CardTitle>
-        <CardDescription>
-          Create the administrator account. You&apos;ll set up two-factor
-          authentication next.
-        </CardDescription>
+        <CardDescription>Create the administrator account.</CardDescription>
       </CardHeader>
       <CardContent>
         <form

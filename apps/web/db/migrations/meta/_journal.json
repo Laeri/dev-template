@@ -15,6 +15,13 @@
       "when": 1794135071396,
       "tag": "0001_fluffy_warpath",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794135480807,
+      "tag": "0002_many_whizzer",
+      "breakpoints": true
     }
   ]
 }

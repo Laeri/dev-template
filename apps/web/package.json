@@ -46,6 +46,7 @@
     "react-dom": "^19",
     "react-email": "^6.11.6",
     "react-hook-form": "^7.91.0",
+    "react-qr-code": "^2.2.0",
     "react-resizable-panels": "^4.16.0",
     "recharts": "3.8.0",
     "server-only": "^0.0.1",

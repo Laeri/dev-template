@@ -12,6 +12,7 @@ import { admin, twoFactor } from "better-auth/plugins"
 import { db, schema } from "@/db"
 import { sendResetPasswordEmail, sendVerifyEmail } from "@/lib/email"
 import { env } from "@/lib/env"
+import { requiresTwoFactor } from "@/lib/two-factor"
 
 export const APP_NAME = "Next.js Template"
 
@@ -36,10 +37,10 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      // TOTP is mandatory for password admins, so they may not turn it off.
+      // While TOTP is required for this user, they may not turn it off.
       if (ctx.path === "/two-factor/disable") {
         const session = await getSessionFromCtx(ctx)
-        if (session?.user.role === "admin") {
+        if (session && (await requiresTwoFactor(session.user))) {
           throw new APIError("FORBIDDEN", {
             message: "Two-factor authentication is required for admins",
           })

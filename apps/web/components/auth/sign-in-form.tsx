@@ -24,6 +24,7 @@ import { toast } from "sonner"
 import { z } from "zod"
 
 import { signIn } from "@/lib/auth-client"
+import { safeRedirectPath } from "@/lib/safe-redirect"
 
 const signInSchema = z.object({
   email: z.email("Enter a valid email"),
@@ -41,12 +42,17 @@ export function SignInForm() {
   })
 
   async function onSubmit(values: SignInValues) {
-    const { error } = await signIn.email(values)
+    const callbackUrl = safeRedirectPath(searchParams.get("callbackUrl"))
+    const { data, error } = await signIn.email(values)
     if (error) {
       toast.error(error.message ?? "Could not sign in")
       return
     }
-    router.push(searchParams.get("callbackUrl") ?? "/dashboard")
+    if (data && "twoFactorRedirect" in data && data.twoFactorRedirect) {
+      router.push(`/two-factor?callbackUrl=${encodeURIComponent(callbackUrl)}`)
+      return
+    }
+    router.push(callbackUrl)
     router.refresh()
   }
 
