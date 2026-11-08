@@ -1,11 +1,11 @@
 import "server-only"
 
-import { db, schema } from "@workspace/db"
 import { renderResetPassword, renderVerifyEmail } from "@workspace/email"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { nextCookies } from "better-auth/next-js"
 
+import { db, schema } from "@/db"
 import { sendEmail } from "@/lib/email"
 import { env } from "@/lib/env"
 

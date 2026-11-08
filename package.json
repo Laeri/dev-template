@@ -8,10 +8,10 @@
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck",
-    "db:generate": "pnpm --filter @workspace/db db:generate",
-    "db:migrate": "pnpm --filter @workspace/db db:migrate",
-    "db:push": "pnpm --filter @workspace/db db:push",
-    "db:studio": "pnpm --filter @workspace/db db:studio"
+    "db:generate": "pnpm --filter web db:generate",
+    "db:migrate": "pnpm --filter web db:migrate",
+    "db:push": "pnpm --filter web db:push",
+    "db:studio": "pnpm --filter web db:studio"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

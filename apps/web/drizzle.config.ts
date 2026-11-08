@@ -1,11 +1,13 @@
-import { config } from "dotenv"
+import path from "node:path"
+
+import { loadEnvConfig } from "@next/env"
 import { defineConfig } from "drizzle-kit"
 
-config({ path: "../../.env" })
+loadEnvConfig(path.resolve(process.cwd(), "../.."))
 
 export default defineConfig({
-  schema: "./src/schema/index.ts",
-  out: "./drizzle",
+  schema: "./db/schema/index.ts",
+  out: "./db/migrations",
   dialect: "postgresql",
   casing: "snake_case",
   dbCredentials: {

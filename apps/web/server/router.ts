@@ -1,6 +1,8 @@
 import "server-only"
 
-import { and, db, desc, eq, schema } from "@workspace/db"
+import { and, desc, eq } from "drizzle-orm"
+
+import { db, schema } from "@/db"
 
 import { authed, os } from "./orpc"
 
